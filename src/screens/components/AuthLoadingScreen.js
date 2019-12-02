@@ -6,14 +6,9 @@ class AuthLoadingScreen extends Component {
     constructor(props) {
         super(props)
     }
-
-    componentDidUpdate() {
-        const { token } = this.props
-        this.props.navigation.navigate(token ? 'Main' : 'Auth')
-    }
-
+    
     componentDidMount() {
-        this.props.getToken()
+        this.props.getToken(this.props.navigation)
     }
 
     render() {

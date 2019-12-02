@@ -6,7 +6,8 @@ import SignUpScreen from './components/SignUpScreen'
 const mapStateToProps = state => {
     return {
         token: state.user.error,
-        error: state.user.error
+        error: state.user.error,
+        isLoading: state.user.isLoading
     }
 }
 

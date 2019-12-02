@@ -1,23 +1,20 @@
 import axios from 'axios'
-import { SIGNIN_METHOD, SIGNUP_METHOD, FETCH_USERS, BASE_API_URL } from '../constants/commonKeys'
+import {
+    SIGNIN_METHOD,
+    SIGNUP_METHOD,
+    FETCH_USERS,
+    BASE_API_URL
+} from '../constants/commonKeys'
 import SessionManager from '../utils/SessionManager'
-
-//create client instance 
-const client = axios.create({
-    baseURL: BASE_API_URL
-})
-
-//define request interceptor for passing token
-client.interceptors.request.use(async (config) => {
-    return config
-})
 
 class ApiCaller {
     constructor() {
         axios.defaults.baseURL = BASE_API_URL;
         axios.interceptors.request.use(
             async (req) => {
-                if (req.url.indexOf('users') > -1 && req.method.toLowerCase() === 'get') {
+
+                //condition for the single api method that need pass a token value
+                if (req.url.includes('users') && req.method.toLowerCase() === 'get') {
                     const tokenValue = await SessionManager.getSessionToken();
                     if (tokenValue) {
                         req.headers.Authorization = tokenValue;
@@ -25,6 +22,10 @@ class ApiCaller {
                         alert('Token not present...');
                     }
                 }
+
+                //set validate status to true to avoid any status code
+                req.validateStatus = (status) => true
+
                 return req;
             },
             (error) => {
@@ -37,45 +38,49 @@ class ApiCaller {
 
     signUpAsync(firstName, lastName, email, password, verifyPassword, defaultCompany) {
         return new Promise(async (resolve, reject) => {
-            const response = await client
+            const { data: { errors, session } } = await axios
                 .post(SIGNUP_METHOD, {
-                    firstname: firstName, lastname: lastName,
-                    email: email, password: password,
+                    firstname: firstName,
+                    lastname: lastName,
+                    email: email,
+                    password: password,
                     verify_password: verifyPassword,
                     default_company: defaultCompany
                 })
                 .catch(ex => {
-                    reject(`ERROR... ${ex}`)
+                    reject('Something went wrong')
                 })
-            if (response) {
-                resolve(response.data)
+            if (errors) {
+                reject(errors.message)
+            } else {
+                resolve(session.token)
             }
         })
     }
 
     signInAsync(email, password) {
         return new Promise(async (resolve, reject) => {
-            const response = await client.post(SIGNIN_METHOD, { email, password })
-                .catch((ex, a) => {
-                    reject('Something went wrong, review your credentials')
+            const { data: { errors, token } } = await axios.post(SIGNIN_METHOD, { email, password })
+                .catch((ex) => {
+                    reject('Something went wrong')
                 })
-            if (response) {
-                resolve(response.data.token)
+            if (errors) {
+                reject(errors.message)
+            } else {
+                resolve(token)
             }
         })
     }
 
     async fetchUsersAsync() {
         return new Promise(async (resolve, reject) => {
-            const response = await client.get(FETCH_USERS)
+            const { data } = await axios.get(FETCH_USERS)
                 .catch(ex => {
-                    console.log('FETCH ERROR', ex)
-                    reject('something went wrong...' + ex)
+                    reject('something went wrong' + ex)
                 })
-            resolve(response)
+            resolve(data)
         })
     }
-
 }
 
 export default new ApiCaller()

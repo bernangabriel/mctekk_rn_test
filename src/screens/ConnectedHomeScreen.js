@@ -1,18 +1,20 @@
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { fetchUsers, logout } from '../actions/user.action'
+import { fetchUser, logout } from '../actions/user.action'
 import HomeScreen from './components/HomeScreen'
 
 const mapStateToProps = state => {
     return {
         users: state.user.users,
-        token: state.user.token
+        token: state.user.token,
+        isLoading: state.user.isLoading,
+        error: state.user.error
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        fetchUsers: bindActionCreators(fetchUsers, dispatch),
+        fetchUser: bindActionCreators(fetchUser, dispatch),
         logout: bindActionCreators(logout, dispatch)
     }
 }

@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, ActivityIndicator } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { WHITE, GREEN } from '../../constants/colors'
 import { UserList } from '../../components/user'
+import { SnackBar } from '../../components/common'
 
 class HomeScreen extends Component {
     static navigationOptions = ({ navigation }) => {
@@ -31,22 +32,30 @@ class HomeScreen extends Component {
     }
 
     componentDidMount() {
+
+        //pass logout action to navigationOptions
         this.props.navigation.setParams({
             logout: this.props.logout
         })
-        this.props.fetchUsers()
+
+        //fetch user data
+        this.props.fetchUser()
     }
 
     render() {
-        const { users } = this.props
+        const { isLoading, error, users } = this.props
         return (
             <View style={styles.container}>
-                {users.length == 0
-                    ? (<View style={styles.loading}>
-                        <ActivityIndicator size={50} color={GREEN} />
-                        <Text>Loading, please wait...</Text>
-                    </View>)
-                    : <UserList users={users} />}
+                {users.length > 0
+                    ? <UserList users={users} />
+                    : (<ActivityIndicator size={30} />)
+                }
+
+                {error.length > 0 && (
+                    <View style={{ flex: 1, justifyContent: 'flex-end' }}>
+                        <SnackBar message={error} />
+                    </View>
+                )}
             </View>
         )
     }

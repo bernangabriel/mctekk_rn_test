@@ -6,9 +6,9 @@ export const SIGN_IN_FAILURE = 'sign_in_failure'
 export const SIGN_UP_SUCCESS = 'sign_up_success'
 export const SIGN_UP_FAILURE = 'sign_up_failure'
 
-//fetch users
-export const FETCH_USERS = 'fetch_users'
-export const RECEIVE_USERS = 'receive_users'
+//fetch user
+export const FETCH_USER_SUCCESS = 'fetch_user_success'
+export const FETCH_USER_FAILURE = 'fetch_user_failure'
 
 //logout
 export const LOGOUT = 'logout'
@@ -16,5 +16,6 @@ export const LOGOUT = 'logout'
 //get token
 export const GET_TOKEN = 'get_token'
 
+//generic loading action
 export const LOADING = 'loading'
 

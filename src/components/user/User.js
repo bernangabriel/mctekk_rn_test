@@ -5,7 +5,7 @@ import { DARK_GREY, LIGHT_GREY } from '../../constants/colors'
 import PropTypes from 'prop-types'
 
 const User = (props) => {
-    const { name, email } = props
+    const { id, firstName, displayName, email } = props
     return (
         <View style={styles.container}>
             <View style={styles.icon}>
@@ -14,10 +14,10 @@ const User = (props) => {
             <View style={styles.body}>
                 <View style={{ flexDirection: 'row', flex: 1 }}>
                     <Text style={{ flex: 1, fontSize: 15, fontWeight: 'bold' }}>
-                        {name.toUpperCase()}
+                        {firstName.toUpperCase()}  {displayName.toUpperCase()}
                     </Text>
                     <Text style={{ justifyContent: 'flex-end', fontSize: 8 }}>
-                        0.00
+                        {id}
                     </Text>
                 </View>
                 <Text style={{ fontSize: 13 }}>{email}</Text>
@@ -46,7 +46,9 @@ const styles = StyleSheet.create({
 })
 
 User.propTypes = {
-    name: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
+    firstName: PropTypes.string.isRequired,
+    displayName: PropTypes.string.isRequired,
     email: PropTypes.string.isRequired
 }
 

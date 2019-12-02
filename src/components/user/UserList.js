@@ -9,7 +9,10 @@ const UserList = (props) => {
             data={users}
             keyExtractor={item => `${item.id}`}
             renderItem={({ item }) => (
-                <User name={item.name} email={item.email} />
+                <User id={item.id}
+                    firstName={item.firstname}
+                    displayName={item.displayname}
+                    email={item.email} />
             )} />
     )
 }

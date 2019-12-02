@@ -13,14 +13,9 @@ class SignInScreen extends Component {
         }
     }
 
-    componentDidUpdate() {
-        const { token } = this.props
-        this.props.navigation.navigate(token ? 'Main' : 'Auth')
-    }
-
     onSignInHandler() {
         const { username, password } = this.state
-        this.props.signIn(username, password)
+        this.props.signIn(username, password, this.props.navigation)
     }
 
     onSignupHandler() {
@@ -28,9 +23,7 @@ class SignInScreen extends Component {
     }
 
     render() {
-        const { error, token, isLoading } = this.props
-        this.props.navigation.navigate(token ? 'Main' : 'Auth')
-
+        const { error, isLoading } = this.props
         return (
             <View style={styles.container}>
                 <View style={styles.logo}>
@@ -55,7 +48,8 @@ class SignInScreen extends Component {
                         <ButtonExtended title='SIGN IN'
                             color={GREEN} textColor={WHITE}
                             style={{ marginTop: 20 }}
-                            onPress={() => this.onSignInHandler()} />
+                            onPress={() => this.onSignInHandler()}
+                            isLoading={isLoading} />
 
                         <View style={styles.signupContainer}>
                             <Text>Don't have an account?</Text>
@@ -65,15 +59,11 @@ class SignInScreen extends Component {
                         </View>
                     </ScrollView>
                 </View>
-
-                {isLoading && <View>
-                    <ActivityIndicator size={30} />
-                </View>}
-                {error &&
+                {error.length > 0 && (
                     <View style={{ flex: 1, justifyContent: 'flex-end' }}>
                         <SnackBar message={error} />
                     </View>
-                }
+                )}
             </View>
         )
     }
